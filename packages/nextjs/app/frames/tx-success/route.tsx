@@ -3,6 +3,7 @@ import Bonfire from "../../../components/assets/bonfireLogo";
 import { frames } from "../frames";
 import { Button } from "frames.js/next";
 import { createPublicClient, http } from "viem";
+import { parseAbiItem } from "viem";
 import { hardhat } from "viem/chains";
 
 export const publicClient = createPublicClient({
@@ -38,13 +39,50 @@ export const POST = frames(async ctx => {
       ],
       stateMutability: "view",
     },
+
+    {
+      type: "event",
+      name: "NewTrybe",
+      inputs: [
+        {
+          name: "tokenId",
+          type: "uint256",
+          indexed: true,
+          internalType: "uint256",
+        },
+        {
+          name: "to",
+          type: "address",
+          indexed: true,
+          internalType: "address",
+        },
+        {
+          name: "tribe",
+          type: "string",
+          indexed: false,
+          internalType: "string",
+        },
+      ],
+      anonymous: false,
+    },
   ] as Abi;
 
+  const logs = await publicClient.getContractEvents({
+    address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+    abi: wagmiAbi,
+    eventName: "NewTrybe",
+    args: {
+      to: ctx.connectedAddress,
+    },
+  });
+
+  console.log(logs);
+
   const data = await publicClient.readContract({
-    address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
     abi: wagmiAbi,
     functionName: "tribeStats",
-    args: [1n],
+    args: [logs[logs.length - 1].args.tokenId],
   });
 
   return {
@@ -85,7 +123,6 @@ export const POST = frames(async ctx => {
             <div tw="flex">Transaction submitted! {ctx.message?.transactionId}</div>
           </div>
           <span style={{ fontSize: 40 }} tw="flex flex-col w-2/3 top-12 left-52 p-6">
-            {latestHaiku?.haikipu.haiku}
             {data}
           </span>
         </div>

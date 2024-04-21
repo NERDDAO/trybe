@@ -17,7 +17,7 @@ contract Trybe is
     ERC1155Supply,
     ERC1155URIStorage
 {
-    event NewTrybe(uint256 indexed tokenId, string indexed tribe);
+    event NewTrybe(uint256 indexed tokenId, address indexed to, string tribe);
 
     enum Options {
         LOW,
@@ -107,7 +107,7 @@ contract Trybe is
         wordsToTokenId[newSupply] = newTrybe;
 
         _mint(msg.sender, newSupply, 1, "");
-        emit NewTrybe(newSupply, tribe);
+        emit NewTrybe(newSupply, msg.sender, tribe);
     }
 
     function tribeStats(
