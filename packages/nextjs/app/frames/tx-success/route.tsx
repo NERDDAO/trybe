@@ -3,8 +3,8 @@ import Bonfire from "../../../components/assets/bonfireLogo";
 import { frames } from "../frames";
 import { Button } from "frames.js/next";
 import { createPublicClient, http } from "viem";
-import { parseAbiItem } from "viem";
 import { hardhat } from "viem/chains";
+import { inngest } from "~~/app/inngest/client";
 
 export const publicClient = createPublicClient({
   chain: hardhat,
@@ -12,11 +12,6 @@ export const publicClient = createPublicClient({
 });
 
 export const POST = frames(async ctx => {
-  const state = ctx.state;
-  const haiku = await fetch(`https://fworks.vercel.app/api/mongo/haiku?id=${state.id}&type=hash`);
-  const hk = await haiku.json();
-  const hkLength = hk.length;
-  const latestHaiku = hk[hkLength - 1];
   console.log(ctx.message);
 
   const wagmiAbi = [
@@ -76,13 +71,23 @@ export const POST = frames(async ctx => {
     },
   });
 
+  const latestLog = logs[logs.length - 1];
+
   console.log(logs);
 
   const data = await publicClient.readContract({
     address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
     abi: wagmiAbi,
     functionName: "tribeStats",
-    args: [logs[logs.length - 1].args.tokenId],
+    args: [latestLog.args.tokenId],
+  });
+
+  await inngest.send({
+    name: "test/hello4.world",
+    data: {
+      prompt: data,
+      fid: latestLog.args.tokenId,
+    },
   });
 
   return {
