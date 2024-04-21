@@ -41,7 +41,7 @@ export const POST = frames(async ctx => {
   ] as Abi;
 
   const data = await publicClient.readContract({
-    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+    address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
     abi: wagmiAbi,
     functionName: "tribeStats",
     args: [1n],

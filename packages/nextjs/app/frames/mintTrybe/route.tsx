@@ -11,8 +11,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<TransactionTa
     throw new Error("No frame message");
   }
   console.log(frameMessage);
-  const state = JSON.parse(frameMessage.state || "{}");
-  const trybeName = state.textInput;
+  const trybeName = frameMessage.inputText;
 
   const abi = [
     {
