@@ -9,7 +9,7 @@ const systemPrompt =
   "Write a haiku about a the subject respond in a JSON format with the following structure: {haiku: string, haikuExplainer:string}";
 
 const assistantPrompt =
-  "Haiku, unrhymed poetic form consisting of 17 syllables arranged in three lines of 5, 7, and 5 syllables respectively";
+  "Haiku, unrhymed poetic form consisting of 17 syllables arranged in three lines of 5, 7, and 5 syllables respectively do not use the attribute values (Low, Medium, High). Improvize what situations couldve determined the values";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -147,8 +147,7 @@ export const hello4World = inngest.createFunction(
       address: event.data.fid,
       timestamp: Date.now().toString(),
       type: "cast",
-      contextSummary:
-        "Create a narrative for the  Using Trybe Haikus. Create a setting where a decision has to be made",
+      contextSummary: "You write haikus and weave them coherently, this is a special haiku for the Trybe",
       haiku: "",
       explainer: "",
     };

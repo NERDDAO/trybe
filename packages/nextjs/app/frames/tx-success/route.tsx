@@ -11,6 +11,7 @@ export const publicClient = createPublicClient({
   transport: http(),
 });
 
+const TRYBE_ADDRESS = process.env.TRYBE_CONTRACT;
 export const POST = frames(async ctx => {
   console.log(ctx.message);
 
@@ -63,7 +64,7 @@ export const POST = frames(async ctx => {
   ] as Abi;
 
   const logs = await publicClient.getContractEvents({
-    address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+    address: TRYBE_ADDRESS,
     abi: wagmiAbi,
     eventName: "NewTrybe",
     args: {
@@ -76,17 +77,17 @@ export const POST = frames(async ctx => {
   console.log(logs);
 
   const data = await publicClient.readContract({
-    address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+    address: TRYBE_ADDRESS,
     abi: wagmiAbi,
     functionName: "tribeStats",
-    args: [latestLog.args.tokenId],
+    args: [latestLog.args?.tokenId],
   });
 
   await inngest.send({
     name: "test/hello4.world",
     data: {
       prompt: data,
-      fid: latestLog.args.tokenId,
+      fid: latestLog.args?.tokenId,
     },
   });
 
