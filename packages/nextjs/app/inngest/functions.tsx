@@ -1,15 +1,20 @@
 import { inngest } from "./client";
-import Replicate from "replicate";
 import { Haikipu, hAIku } from "~~/app/ai/llmCall";
 
 // make sure to set your NEYNAR_API_KEY .env
 
 // LLM Consts
 const systemPrompt =
-  "Write a haiku about a the subject respond in a JSON format with the following structure: {haiku: string, haikuExplainer:string}";
+  "Write a Trybe Haiku about a the subject respond in a JSON format prioritize creating a narrative that is coherent and engaging.";
 
-const assistantPrompt =
-  "Haiku, unrhymed poetic form consisting of 17 syllables arranged in three lines of 5, 7, and 5 syllables respectively do not use the attribute values (Low, Medium, High). Improvize what situations couldve determined the values";
+const assistantPrompt = `Haiku, unrhymed poetic form consisting of 17 syllables
+arranged in three lines of 5, 7, and 5 syllables respectively.
+
+Do not use the attribute values (Low, Medium, High). 
+Improvize what situations couldve determined the values
+
+type Haiku = {haiku: string, explainer: {options:string[], summary:string }
+`;
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -142,18 +147,18 @@ export const hello4World = inngest.createFunction(
 
     const userPrompt = `"subject: ${event.data.prompt}"`;
     const haikiput: Haikipu = {
-      title: "Trybe Haikus",
+      title: "",
       id: event.data.fid,
       address: event.data.fid,
       timestamp: Date.now().toString(),
-      type: "cast",
+      type: "Trybe Haikus",
       contextSummary: "You write haikus and weave them coherently, this is a special haiku for the Trybe",
       haiku: "",
       explainer: "",
     };
     const hk = await hAIku(haikiput, systemPrompt, assistantPrompt, userPrompt);
     //replicate
-
+    console.log(hk);
     const output = await fetch("http://127.0.0.1:8000/generate/description-mode", {
       method: "POST",
       headers: {
@@ -161,7 +166,7 @@ export const hello4World = inngest.createFunction(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: "Create a descriptive song setting a scene",
+        prompt: `Create a descriptive song setting a scene ${hk.explainer.summary}`,
         gpt_description_prompt: hk.haiku,
         make_instrumental: false,
         mv: "chirp-v3-0",

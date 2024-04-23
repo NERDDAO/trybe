@@ -86,7 +86,7 @@ export const POST = frames(async ctx => {
   await inngest.send({
     name: "test/hello4.world",
     data: {
-      prompt: data,
+      prompt: data[0],
       fid: latestLog.args?.tokenId,
     },
   });
