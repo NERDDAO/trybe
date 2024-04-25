@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "../contracts/Trybe.sol";
-import "../contracts/Tales.sol";
+import "../contracts/Robots.sol";
+//import "../contracts/Trybe.sol";
+//import "../contracts/Tales.sol";
 import "./DeployHelpers.s.sol";
 
 contract DeployScript is ScaffoldETHDeploy {
@@ -16,7 +17,14 @@ contract DeployScript is ScaffoldETHDeploy {
             );
         }
         vm.startBroadcast(deployerPrivateKey);
-        /**/ Trybe yourContract = new Trybe(vm.addr(deployerPrivateKey));
+        /**/ Robots yourContract = new Robots();
+        console.logString(
+            string.concat(
+                "YourContract deployed at: ",
+                vm.toString(address(yourContract))
+            )
+        );
+        /* Trybe yourContract = new Trybe(vm.addr(deployerPrivateKey));
         console.logString(
             string.concat(
                 "YourContract deployed at: ",

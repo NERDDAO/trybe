@@ -99,8 +99,8 @@ contract Trybe is
 
         Trybes memory newTrybe = Trybes(
             tribe,
-            randomHue(1, 361),
-            randomHue(2, 361),
+            randomHue(1, totalSupply()),
+            randomHue(2, totalSupply()),
             newStats
         );
 
@@ -121,14 +121,21 @@ contract Trybe is
         string[4] memory _stats;
         Trybes memory tokenWord = wordsToTokenId[_tokenId];
         _stats[0] = tokenWord.name;
-        _stats[1] = tokenWord.bgHue.toString();
-        _stats[2] = tokenWord.textHue.toString();
+        _stats[1] = string(
+            abi.encodePacked(
+                "x: ",
+                tokenWord.bgHue.toString(),
+                " y: ",
+                tokenWord.textHue.toString()
+            )
+        );
+        _stats[2] = string(
+            abi.encodePacked(tokenWord.stats.pop_mod * totalSupply(_tokenId))
+        );
         _stats[3] = string(
             abi.encodePacked(
                 "Trybe: ",
                 tokenWord.name,
-                "Pop: ",
-                (tokenWord.stats.pop_mod * totalSupply(_tokenId)).toString(),
                 " Resources: ",
                 tokenWord.stats.resources,
                 " Technology: ",
@@ -169,7 +176,7 @@ contract Trybe is
     }
 
     function buildImage(
-        string memory _tribe,
+        string[4] memory _tribe,
         uint256 _bgHue,
         uint256 _textHue
     ) private pure returns (bytes memory) {
@@ -183,7 +190,8 @@ contract Trybe is
                     '<text y="50%" x="50%" text-anchor="middle" dy=".1em" fill="hsl(',
                     _textHue.toString(),
                     ',100%,80%)">',
-                    _tribe,
+                    "TRYBE",
+                    _tribe[0],
                     "</text>"
                     "</svg>"
                 )
@@ -220,7 +228,7 @@ contract Trybe is
                             "' Trybe by Nerds\","
                             '"image":"data:image/svg+xml;base64,',
                             buildImage(
-                                tribeStats(_tokenId)[3],
+                                tribeStats(_tokenId),
                                 tokenWord.bgHue,
                                 tokenWord.textHue
                             ),
