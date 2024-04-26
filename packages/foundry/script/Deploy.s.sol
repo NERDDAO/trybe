@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "../contracts/Robots.sol";
-//import "../contracts/Trybe.sol";
+import "../contracts/Trybe.sol";
 //import "../contracts/Tales.sol";
 import "./DeployHelpers.s.sol";
 
@@ -17,20 +17,21 @@ contract DeployScript is ScaffoldETHDeploy {
             );
         }
         vm.startBroadcast(deployerPrivateKey);
-        /**/ Robots yourContract = new Robots();
+
+        /**/ Trybe trybeContract = new Trybe(vm.addr(deployerPrivateKey));
         console.logString(
             string.concat(
                 "YourContract deployed at: ",
-                vm.toString(address(yourContract))
+                vm.toString(address(trybeContract))
             )
         );
-        /* Trybe yourContract = new Trybe(vm.addr(deployerPrivateKey));
+        Robots robotsContract = new Robots(address(trybeContract));
         console.logString(
             string.concat(
                 "YourContract deployed at: ",
-                vm.toString(address(yourContract))
+                vm.toString(address(robotsContract))
             )
-        );
+        ); /**/
         /* Tales talesContract = new Tales(
                 vm.addr(deployerPrivateKey)
                 //address(yourContract)

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "./Base64.sol";
+import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 
 contract Trybe is
     ERC1155,
@@ -90,6 +90,8 @@ contract Trybe is
         }
 
         uint256 newSupply = totalSupply() + 1;
+        _mint(msg.sender, newSupply, 1, "");
+        emit NewTrybe(newSupply, msg.sender, tribe);
 
         Stats memory newStats = Stats(
             randomHue(1, 42),
@@ -99,20 +101,17 @@ contract Trybe is
 
         Trybes memory newTrybe = Trybes(
             tribe,
-            randomHue(1, totalSupply()),
-            randomHue(2, totalSupply()),
+            randomHue(1, newSupply),
+            randomHue(2, newSupply),
             newStats
         );
 
         wordsToTokenId[newSupply] = newTrybe;
-
-        _mint(msg.sender, newSupply, 1, "");
-        emit NewTrybe(newSupply, msg.sender, tribe);
     }
 
     function tribeStats(
         uint256 _tokenId
-    ) public view returns (string[4] memory) {
+    ) external view returns (string[4] memory) {
         require(
             exists(_tokenId),
             "ERC1155Metadata: URI query for nonexistent token"
@@ -175,29 +174,6 @@ contract Trybe is
         _mint(msg.sender, _tokenId, 1, "");
     }
 
-    function buildImage(
-        string[4] memory _tribe,
-        uint256 _bgHue,
-        uint256 _textHue
-    ) private pure returns (bytes memory) {
-        return
-            Base64.encode(
-                abi.encodePacked(
-                    '<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">'
-                    '<rect height="100%" width="100%" y="0" x="0" fill="hsl(',
-                    _bgHue.toString(),
-                    ',50%,25%)"/>'
-                    '<text y="50%" x="50%" text-anchor="middle" dy=".1em" fill="hsl(',
-                    _textHue.toString(),
-                    ',100%,80%)">',
-                    "TRYBE",
-                    _tribe[0],
-                    "</text>"
-                    "</svg>"
-                )
-            );
-    }
-
     function uri(
         uint256 _tokenId
     )
@@ -212,32 +188,8 @@ contract Trybe is
             "ERC1155Metadata: URI query for nonexistent token"
         );
 
-        Trybes memory tokenWord = wordsToTokenId[_tokenId];
-        return
-            string(
-                bytes.concat(
-                    "data:application/json;base64,",
-                    Base64.encode(
-                        abi.encodePacked(
-                            "{"
-                            '"name":"',
-                            tokenWord.name,
-                            '",'
-                            '"description":"\'',
-                            bytes(tokenWord.name),
-                            "' Trybe by Nerds\","
-                            '"image":"data:image/svg+xml;base64,',
-                            buildImage(
-                                tribeStats(_tokenId),
-                                tokenWord.bgHue,
-                                tokenWord.textHue
-                            ),
-                            '"'
-                            "}"
-                        )
-                    )
-                )
-            );
+        //Trybes memory tokenWord = wordsToTokenId[_tokenId];
+        return string(bytes.concat());
     }
 
     function mintBatch(

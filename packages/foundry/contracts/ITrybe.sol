@@ -7,4 +7,8 @@ interface ITrybe {
         address account,
         uint256 _tokenId
     ) external view returns (bool);
+
+    function tribeStats(
+        uint256 _tokenId
+    ) external view returns (string[4] memory);
 }
