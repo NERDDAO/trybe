@@ -50,7 +50,7 @@ contract Robots is ERC721, Ownable {
 
     struct RobotAttributes {
         string name;
-        string trybe;
+        uint256 trybeId;
         uint256 exp;
         uint256 level;
         Location location;
@@ -72,21 +72,23 @@ contract Robots is ERC721, Ownable {
     event IncreasedExp(uint256 indexed tokenId, uint256 indexed Exp);
     event IncreasedLv(uint256 indexed tokenId, uint256 indexed Lv);
 
+    ITrybe public immutable trybe;
+
     constructor(
         address _trybeContract
     ) ERC721("RobotNft", "RBT") Ownable(msg.sender) {
         s_tokenCounter = 0;
         trybeContract = _trybeContract;
         gameMaster = msg.sender;
-    }
 
-    ITrybe Trybe = ITrybe(trybeContract);
+        trybe = ITrybe(trybeContract);
+    }
 
     function createRobot(uint256 _id, string memory _name) public {
         uint256 tokenId = s_tokenCounter;
 
         require(
-            Trybe.isMember(msg.sender, _id),
+            trybe.isMember(msg.sender, _id),
             "You are not a member of the Trybe"
         );
 
@@ -95,7 +97,7 @@ contract Robots is ERC721, Ownable {
         s_addressToTokenIds[msg.sender].push(tokenId);
         s_tokenIdToRobotAttributes[tokenId] = RobotAttributes({
             name: _name,
-            trybe: Trybe.tribeStats(_id)[0],
+            trybeId: _id,
             exp: 0,
             level: 1,
             location: Location({x: 0, y: 0, pointOfInterest: "base"}),
