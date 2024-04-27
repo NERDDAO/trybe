@@ -60,7 +60,6 @@ contract Robots is ERC721, Ownable {
 
     /* State variables */
     uint256 private s_tokenCounter;
-    address public trybeContract;
     address public gameMaster;
 
     mapping(uint256 => RobotAttributes) private s_tokenIdToRobotAttributes;
@@ -78,10 +77,9 @@ contract Robots is ERC721, Ownable {
         address _trybeContract
     ) ERC721("RobotNft", "RBT") Ownable(msg.sender) {
         s_tokenCounter = 0;
-        trybeContract = _trybeContract;
         gameMaster = msg.sender;
 
-        trybe = ITrybe(trybeContract);
+        trybe = ITrybe(_trybeContract);
     }
 
     function createRobot(uint256 _id, string memory _name) public {
