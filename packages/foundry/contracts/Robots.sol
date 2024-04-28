@@ -42,6 +42,13 @@ contract Robots is ERC721, Ownable {
         uint256 DEF;
     }
 
+    struct Equipment {
+        string head;
+        string body;
+        string legs;
+        string weapon;
+    }
+
     struct Location {
         uint256 x;
         uint256 y;
@@ -55,7 +62,7 @@ contract Robots is ERC721, Ownable {
         uint256 level;
         Location location;
         Stats stats;
-        string[4] inventory;
+        Equipment equipment;
     }
 
     /* State variables */
@@ -100,7 +107,12 @@ contract Robots is ERC721, Ownable {
             level: 1,
             location: Location({x: 0, y: 0, pointOfInterest: "base"}),
             stats: Stats({HP: 100, ATK: 10, DEF: 10}),
-            inventory: ["", "", "", ""]
+            equipment: Equipment({
+                head: "none",
+                body: "none",
+                legs: "none",
+                weapon: "none"
+            })
         });
 
         s_tokenCounter = s_tokenCounter + 1;
@@ -132,8 +144,11 @@ contract Robots is ERC721, Ownable {
     function trainRobot(
         uint256 tokenId,
         uint256 tokensEarned,
-        Location memory location
+        Location memory location,
+        Stats memory stats,
+        Equipment memory equipment
     ) public {
+        // only game master can train robots and robots must be playing
         if (gameMaster != msg.sender) {
             revert RobotNft__CantTrainRobotIfNotGM();
         }
@@ -146,7 +161,8 @@ contract Robots is ERC721, Ownable {
         require(robot.stats.HP > 0);
         // update location and health if alive
         robot.location = location;
-        robot.stats.HP = robot.stats.HP - 1;
+        robot.stats = stats;
+        robot.equipment = equipment;
 
         if (robotExp < 100 * robotLv) {
             robot.exp = robot.exp + tokensEarned;
@@ -157,6 +173,18 @@ contract Robots is ERC721, Ownable {
             emit IncreasedLv(tokenId, robot.level);
         }
         // mint rate * level of ERC20 token
+        s_tokenIdIsPlaying[tokenId] = false;
+    }
+
+    function saveRobot(uint256 tokenId) public {
+        if (gameMaster != msg.sender) {
+            revert RobotNft__CantTrainRobotIfNotGM();
+        }
+        // reset robot to base location
+        RobotAttributes storage robot = s_tokenIdToRobotAttributes[tokenId];
+        robot.location = Location({x: 0, y: 0, pointOfInterest: "base"});
+        robot.exp = 0;
+        robot.stats.HP = 100;
         s_tokenIdIsPlaying[tokenId] = false;
     }
 
