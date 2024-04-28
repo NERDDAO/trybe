@@ -844,7 +844,7 @@ const deployedContracts = {
   },
   84532: {
     Trybe: {
-      address: "0x1ed74da9e176c05be8a1721cab5374ff3c4d2014",
+      address: "0xf5a3e639ed93341d96273381029d8ecb4eeac14c",
       abi: [
         {
           type: "constructor",
@@ -1679,7 +1679,7 @@ const deployedContracts = {
       },
     },
     Robots: {
-      address: "0x29dd4c625fefcb399745c00001f097a494d7f207",
+      address: "0xf0b9996e6125eaf6c24d30609b27f85fb94d07ce",
       abi: [
         {
           type: "constructor",
@@ -1879,9 +1879,31 @@ const deployedContracts = {
                   ],
                 },
                 {
-                  name: "inventory",
-                  type: "string[4]",
-                  internalType: "string[4]",
+                  name: "equipment",
+                  type: "tuple",
+                  internalType: "struct Robots.Equipment",
+                  components: [
+                    {
+                      name: "head",
+                      type: "string",
+                      internalType: "string",
+                    },
+                    {
+                      name: "body",
+                      type: "string",
+                      internalType: "string",
+                    },
+                    {
+                      name: "legs",
+                      type: "string",
+                      internalType: "string",
+                    },
+                    {
+                      name: "weapon",
+                      type: "string",
+                      internalType: "string",
+                    },
+                  ],
                 },
               ],
             },
@@ -2043,6 +2065,19 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "saveRobot",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
           name: "setApprovalForAll",
           inputs: [
             {
@@ -2159,6 +2194,55 @@ const deployedContracts = {
                 },
               ],
             },
+            {
+              name: "stats",
+              type: "tuple",
+              internalType: "struct Robots.Stats",
+              components: [
+                {
+                  name: "HP",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "ATK",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "DEF",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
+            },
+            {
+              name: "equipment",
+              type: "tuple",
+              internalType: "struct Robots.Equipment",
+              components: [
+                {
+                  name: "head",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "body",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "legs",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "weapon",
+                  type: "string",
+                  internalType: "string",
+                },
+              ],
+            },
           ],
           outputs: [],
           stateMutability: "nonpayable",
@@ -2208,19 +2292,6 @@ const deployedContracts = {
               name: "",
               type: "address",
               internalType: "contract ITrybe",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "trybeContract",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
             },
           ],
           stateMutability: "view",
