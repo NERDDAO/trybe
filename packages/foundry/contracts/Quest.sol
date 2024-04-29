@@ -4,9 +4,9 @@ pragma solidity 0.8.20;
 import "@solady/src/tokens/ERC721.sol";
 import "@solady/src/utils/LibString.sol";
 import "@solady/src/auth/Ownable.sol";
-import "./Robots.sol";
-import "./Trybe.sol";
-import "./Juice.sol";
+import "./IRobots.sol";
+import "./ITrybe.sol";
+import "./IJuice.sol";
 
 contract KingOfTheFrame is ERC721, Ownable {
     using LibString for uint256;

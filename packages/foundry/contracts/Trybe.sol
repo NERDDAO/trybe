@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
+
+import "@solady/src/utils/LibString.sol";
 
 contract Trybe is
     ERC1155,
@@ -17,6 +18,7 @@ contract Trybe is
     ERC1155Supply,
     ERC1155URIStorage
 {
+    using LibString for uint256;
     event NewTrybe(uint256 indexed tokenId, address indexed to, string tribe);
 
     enum Options {
